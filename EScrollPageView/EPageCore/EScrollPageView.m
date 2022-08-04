@@ -122,10 +122,6 @@
         if (self.didAddScrollViewBlock) {
             self.didAddScrollViewBlock(((WKWebView *)subview).scrollView,_index);
         }
-    }else if ([subview isKindOfClass:[UIWebView class]]){
-        if (self.didAddScrollViewBlock) {
-            self.didAddScrollViewBlock(((UIWebView *)subview).scrollView,_index);
-        }
     }else{
         for (UIView *sview in [subview subviews]) {
             if ([sview isKindOfClass:[UIScrollView class]]) {
