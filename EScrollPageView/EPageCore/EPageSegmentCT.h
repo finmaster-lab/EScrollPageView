@@ -16,6 +16,9 @@ typedef NS_ENUM(NSInteger, EPageContentType) {
 
 @interface EPageSegmentCT : UIView
 
+
+@property(nonatomic,retain)EPageSegmentParam *param;                                        //设置参数
+
 - (instancetype)initWithFrame:(CGRect)frame setParam:(EPageSegmentParam *)param;    //初始化
 - (void)updataDataArray:(NSArray<NSString *> *)data;                                //更新数据源
 - (void)setAssociatedScroll;                                                        //设置关联滚动

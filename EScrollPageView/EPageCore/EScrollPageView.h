@@ -17,7 +17,8 @@
 @interface EScrollPageView : UIView
 
 @property(nonatomic,assign)NSInteger currenIndex;
-
+@property(nonatomic,retain)EScrollPageParam *param;
+@property(nonatomic,retain)EPageSegmentCT *segmentCT;
 - (instancetype)initWithFrame:(CGRect)frame dataViews:(NSArray<EScrollPageItemBaseView *> *)dataViews;
 - (instancetype)initWithFrame:(CGRect)frame dataViews:(NSArray<EScrollPageItemBaseView *> *)dataViews setParam:(EScrollPageParam *)param;
 

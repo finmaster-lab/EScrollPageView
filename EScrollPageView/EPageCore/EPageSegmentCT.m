@@ -14,12 +14,14 @@
 
 @property(nonatomic,retain)UICollectionView *collectionView;
 @property(nonatomic,retain)NSArray *dataArray;
-@property(nonatomic,retain)EPageSegmentParam *param;                                        //设置参数
 @property(nonatomic,assign)CGFloat itemWidth;                                               //平均宽度
 @property(nonatomic,assign)NSInteger selectedIndex;                                         //当前选择
 @property(nonatomic,retain)UIView *lineView;
 @property(nonatomic,retain)NSMutableArray *cellArray;
 
+@property (nonatomic, strong) UIView *bline;
+@property (nonatomic, strong) UIView *tline;
+@property (nonatomic, strong) UIView *sline;
 
 @end
 
@@ -37,7 +39,7 @@
     if (self) {
         if (param == nil) {param = [EPageSegmentParam defaultParam];}
         self.selectedIndex = param.startIndex;
-        self.param = param;
+        _param = param;
         self.dataArray = data;
         if (_dataArray) {[self collectionView];}
         self.backgroundColor = ERGBColor(param.bgColor);
@@ -48,6 +50,15 @@
 - (void)updataDataArray:(NSArray<NSString *> *)data{
     self.dataArray = data;
     [[self collectionView] reloadData];
+}
+
+-(void)setParam:(EPageSegmentParam *)param{
+    _param = param;
+    self.backgroundColor = ERGBColor(param.bgColor);
+    self.bline.backgroundColor = ERGBColor(_param.botLineColor);
+    self.tline.backgroundColor = ERGBColor(_param.topLineColor);
+    self.sline.backgroundColor = self.param.lineColor;
+    [self.collectionView reloadData];
 }
 
 - (UICollectionView *)collectionView{
@@ -67,12 +78,12 @@
         [self addSubview:_collectionView];
         [self lineView];
         
-        UIView *bline = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height-0.5, self.frame.size.width, 0.5)];
-        bline.backgroundColor = ERGBColor(_param.botLineColor);
-        UIView *tline = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 0.5)];
-        tline.backgroundColor = ERGBColor(_param.topLineColor);
-        [self addSubview:bline];
-        [self addSubview:tline];
+        self.bline = [[UIView alloc] initWithFrame:CGRectMake(0, self.frame.size.height-0.5, self.frame.size.width, 0.5)];
+        self.bline.backgroundColor = ERGBColor(_param.botLineColor);
+        self.tline = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 0.5)];
+        self.tline.backgroundColor = ERGBColor(_param.topLineColor);
+        [self addSubview:self.bline];
+        [self addSubview:self.tline];
     }
     return _collectionView;
 }
@@ -151,9 +162,9 @@
         _lineView = [[UIView alloc] initWithFrame:CGRectMake(_param.margin_spacing+(self.itemWidth+_param.spacing)*_param.startIndex, self.collectionView.frame.size.height-2, self.itemWidth, 2)];
         _lineView.hidden = !_param.showLine;
         CGFloat lineW = self.param.lineWidth < 0 ? self.itemWidth*0.6 : self.param.lineWidth;
-        UIView *sline = [[UIView alloc] initWithFrame:CGRectMake((_lineView.frame.size.width-lineW)*0.5, 0, lineW, _lineView.frame.size.height)];
-        [_lineView addSubview:sline];
-        sline.backgroundColor = self.param.lineColor;
+        self.sline = [[UIView alloc] initWithFrame:CGRectMake((_lineView.frame.size.width-lineW)*0.5, 0, lineW, _lineView.frame.size.height)];
+        [_lineView addSubview:self.sline];
+        self.sline.backgroundColor = self.param.lineColor;
         [self.collectionView addSubview:_lineView];
         [self.collectionView selectItemAtIndexPath:[NSIndexPath indexPathForRow:self.param.startIndex inSection:0] animated:true scrollPosition:UICollectionViewScrollPositionCenteredHorizontally];
     }
@@ -211,9 +222,10 @@
 @implementation EPageSegmentCell
 
 - (void)updateText:(NSString *)text param:(EPageSegmentParam *)param{
-    self.param = param;
+    _param = param;
     self.textLabel.frame = self.contentView.bounds;
     self.textLabel.text = text;
+    self.textLabel.textColor = ERGBColor(self.param.textColor);
 }
 
 - (void)didSelected:(BOOL)selected{
@@ -225,7 +237,6 @@
     if (_textLabel == nil) {
         _textLabel = [[UILabel alloc] init];
         _textLabel.font = [UIFont systemFontOfSize:self.param.fontSize];
-        _textLabel.textColor = ERGBColor(self.param.textColor);
         _textLabel.textAlignment = NSTextAlignmentCenter;
         [self.contentView addSubview:_textLabel];
     }

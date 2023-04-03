@@ -12,7 +12,6 @@
 @interface ENestScrollPageView()<UIScrollViewDelegate>
 @property(nonatomic,retain,readwrite)EScrollPageView *pageView;
 @property(nonatomic,retain)ESMGRScrollView *scrollView;
-@property(nonatomic,retain)ENestParam *param;
 @property(nonatomic,retain)NSArray<EScrollPageItemBaseView *> *dataViews;
 @property(nonatomic,retain)NSMutableArray<UIScrollView *> *scrollArray;
 
@@ -34,10 +33,10 @@
         if (headView == nil) {_headView = [[UIView alloc] init];}
         CGFloat headHeight = ceil(_headView.frame.size.height);
         _headView.frame = CGRectMake(0, 0, frame.size.width, headHeight);
-        self.param = param;
+        _param = param;
         self.dataViews = dataViews;
         if (self.param == nil) {
-            self.param = [ENestParam defaultParam];
+            _param = [ENestParam defaultParam];
         }
         self.stayHeight = _headView.frame.size.height - fabs(_param.yOffset);
         [self pageView];
@@ -54,6 +53,11 @@
         [self pageView];
     }
     return self;
+}
+
+-(void)setParam:(ENestParam *)param{
+    _param = param;
+    self.pageView.param = param.scrollParam;
 }
 
 - (UIScrollView *)eScrollView{

@@ -11,11 +11,9 @@
 
 
 @interface EScrollPageView()<UIScrollViewDelegate>
-@property(nonatomic,retain)EPageSegmentCT *segmentCT;
 @property(nonatomic,retain)UIScrollView *scrollView;
 @property(nonatomic,retain)NSArray<EScrollPageItemBaseView *> *dataViews;
 
-@property(nonatomic,retain)EScrollPageParam *param;
 @end
 @implementation EScrollPageView
 
@@ -28,7 +26,7 @@
     self = [super initWithFrame:frame];
     if (self) {
         if (param == nil) {param = [EScrollPageParam defaultParam];}
-        self.param = param;
+        _param = param;
         if (param.segmentParam.startIndex >= dataViews.count) {param.segmentParam.startIndex = 0;}
         self.currenIndex = param.segmentParam.startIndex;
         self.dataViews = dataViews;
@@ -86,7 +84,10 @@
     
     self.currenIndex = index;
 }
-
+-(void)setParam:(EScrollPageParam *)param{
+    _param = param;
+    self.segmentCT.param = param.segmentParam;
+}
 - (EPageSegmentCT *)segmentCT{
     if (_segmentCT == nil) {
         _segmentCT = [[EPageSegmentCT alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.param.headerHeight) setParam:self.param.segmentParam];
